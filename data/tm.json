@@ -1,0 +1,142 @@
+[
+  {
+    "source": "이것은 테스트 문장입니다.",
+    "target": "This is a test sentence.",
+    "sourceLang": "ko",
+    "targetLang": "en",
+    "updatedAt": "2025-04-04T07:33:33.192Z"
+  },
+  {
+    "source": "GPT를 사용하여 번역 결과를 확인해보세요.",
+    "target": "Try checking the translation results using GPT.",
+    "sourceLang": "ko",
+    "targetLang": "en",
+    "updatedAt": "2025-04-04T07:33:33.192Z"
+  },
+  {
+    "source": "Lexitra는 내부용 번역기로 개발 중입니다.",
+    "target": "Lexitra is being developed as an internal translation tool.",
+    "sourceLang": "ko",
+    "targetLang": "en",
+    "updatedAt": "2025-04-04T07:33:33.192Z"
+  },
+  {
+    "source": "안녕하세요.",
+    "target": "Hello.",
+    "sourceLang": "ko",
+    "targetLang": "en",
+    "updatedAt": "2025-04-11T13:48:15.032Z"
+  },
+  {
+    "source": "그것이 알고 싶다.",
+    "target": "I want to know that.",
+    "sourceLang": "ko",
+    "targetLang": "en",
+    "updatedAt": "2025-04-11T08:53:33.271Z"
+  },
+  {
+    "source": "본 발명은 반드시 공지요소를 포함하고 있으며, 이 또한 본 발명의 구성요소임을 명시하여야 한다.",
+    "target": "The present invention must necessarily include disclosure elements, which are also essential components of the present invention.",
+    "sourceLang": "ko",
+    "targetLang": "en",
+    "updatedAt": "2025-04-11T08:53:26.255809"
+  },
+  {
+    "source": "올라!",
+    "target": "Raise!",
+    "sourceLang": "ko",
+    "targetLang": "en",
+    "updatedAt": "2025-04-11T08:53:37.727318"
+  },
+  {
+    "source": "봄꽃이 활짝 피었습니다.",
+    "target": "Spring flowers have bloomed widely.",
+    "sourceLang": "ko",
+    "targetLang": "en",
+    "updatedAt": "2025-04-11T08:53:38.338604"
+  },
+  {
+    "source": "짧은 봄, 즐기자구요.",
+    "target": "Let us enjoy the short spring.",
+    "sourceLang": "ko",
+    "targetLang": "en",
+    "updatedAt": "2025-04-11T08:53:39.362640"
+  },
+  {
+    "source": "안녕 이것은 테스트야.",
+    "target": "Hello, this is a test.",
+    "sourceLang": "ko",
+    "targetLang": "en",
+    "updatedAt": "2025-04-11T11:49:34.380Z"
+  },
+  {
+    "source": "오랜만이다.",
+    "target": "Long time no see.",
+    "sourceLang": "ko",
+    "targetLang": "en",
+    "updatedAt": "2025-04-11T08:53:44.380949"
+  },
+  {
+    "source": "검색도 가능해?",
+    "target": "Is searching also possible?",
+    "sourceLang": "ko",
+    "targetLang": "en",
+    "updatedAt": "2025-04-11T08:53:44.890704"
+  },
+  {
+    "source": "오늘은 4월 4일이야.",
+    "target": "Today is April 4th.",
+    "sourceLang": "ko",
+    "targetLang": "en",
+    "updatedAt": "2025-04-11T08:53:50.834476"
+  },
+  {
+    "source": "지금은 열심히 GPT로 개발 중이야.",
+    "target": "I am currently developing diligently with GPT.",
+    "sourceLang": "ko",
+    "targetLang": "en",
+    "updatedAt": "2025-04-11T08:53:51.480250"
+  },
+  {
+    "source": "안녕하십니까?",
+    "target": "Greetings.",
+    "sourceLang": "ko",
+    "targetLang": "en",
+    "updatedAt": "2025-04-13T01:41:45.430346"
+  },
+  {
+    "source": "오늘은 4월 13일입니다.",
+    "target": "Today is April 13th.",
+    "sourceLang": "ko",
+    "targetLang": "en",
+    "updatedAt": "2025-04-13T01:41:45.981368"
+  },
+  {
+    "source": "바람이 많이 불고 비도 오는 추운 봄날이네.",
+    "target": "It is a cold spring day with strong winds and rain.",
+    "sourceLang": "ko",
+    "targetLang": "en",
+    "updatedAt": "2025-04-13T01:41:46.592536"
+  },
+  {
+    "source": "벗꽃이 다 떨어질 것 같아 걱정이야.",
+    "target": "I am worried that all the cherry blossoms will fall.",
+    "sourceLang": "ko",
+    "targetLang": "en",
+    "updatedAt": "2025-04-13T01:41:47.186833"
+  },
+  {
+    "source": "요즘 여기저기서 다들 LLM 얘기로 난리군.",
+    "target": "Recently, there has been a lot of talk about LLM everywhere.",
+    "sourceLang": "ko",
+    "targetLang": "en",
+    "updatedAt": "2025-04-13T01:41:47.761974"
+  },
+  {
+    "source": "내일은 날이 좀 따뜻하고 해가 나면 좋겠다.",
+    "target": "I hope tomorrow will be warmer and sunny.",
+    "sourceLang": "ko",
+    "targetLang": "en",
+    "updatedAt": "2025-04-13T01:43:19.064750"
+  }
+]

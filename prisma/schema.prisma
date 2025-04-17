@@ -1,0 +1,17 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model TranslationMemory {
+  id         Int      @id @default(autoincrement())
+  source     String
+  target     String
+  sourceLang String
+  targetLang String
+  updatedAt  DateTime @updatedAt
+}
