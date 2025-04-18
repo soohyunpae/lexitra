@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Modal from '../../components/Modal';
-import TMEditForm from '../../components/TMEditForm';
+import TMEditForm from '@/components/TMEditForm';
 
 // TM 데이터 인터페이스 선언
 interface TMEntry {
@@ -12,6 +12,8 @@ interface TMEntry {
   sourceLang: string;
   targetLang: string;
   updatedAt: string;
+  comment?: string;
+  status?: string;
 }
 
 export default function TMManagementPage() {
@@ -174,6 +176,7 @@ export default function TMManagementPage() {
           <TMEditForm
             initialSource={currentEditItem.source}
             initialTarget={currentEditItem.target}
+            initialComment={currentEditItem.comment || ''}
             onUpdate={handleUpdate}
           />
         )}

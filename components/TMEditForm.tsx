@@ -6,12 +6,16 @@ import { useRouter } from 'next/navigation';
 interface TMEditFormProps {
   initialSource: string;
   initialTarget: string;
+  initialComment?: string;
+  initialStatus?: string;
   onUpdate: () => void;
 }
 
-export default function TMEditForm({ initialSource, initialTarget, onUpdate }: TMEditFormProps) {
+export default function TMEditForm({ initialSource, initialTarget, initialComment, initialStatus, onUpdate }: TMEditFormProps) {
   const router = useRouter();
   const [target, setTarget] = useState(initialTarget);
+  const [comment, setComment] = useState(initialComment || '');
+  const [status, setStatus] = useState(initialStatus || 'MT');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -26,6 +30,8 @@ export default function TMEditForm({ initialSource, initialTarget, onUpdate }: T
         body: JSON.stringify({
           source: initialSource,
           target,
+          comment,
+          status,
           sourceLang: 'ko',
           targetLang: 'en',
         }),
@@ -62,6 +68,28 @@ export default function TMEditForm({ initialSource, initialTarget, onUpdate }: T
           className="w-full border p-2 rounded text-sm"
           rows={4}
         />
+      </div>
+      <div>
+        <label className="block font-medium mb-1">코멘트</label>
+        <textarea
+          value={comment}
+          onChange={(e) => setComment(e.target.value)}
+          className="w-full border p-2 rounded text-sm"
+          rows={2}
+        />
+      </div>
+      <div>
+        <label className="block font-medium mb-1">상태</label>
+        <select
+          value={status}
+          onChange={(e) => setStatus(e.target.value)}
+          className="w-full border p-2 rounded text-sm"
+        >
+          <option value="MT">MT (Machine Translated)</option>
+          <option value="Fuzzy">Fuzzy Match</option>
+          <option value="Exact">Exact Match</option>
+          <option value="Approved">Approved</option>
+        </select>
       </div>
       {error && <p className="text-red-500 text-sm">{error}</p>}
       <button

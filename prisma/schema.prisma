@@ -14,4 +14,6 @@ model TranslationMemory {
   sourceLang String
   targetLang String
   updatedAt  DateTime @updatedAt
+  /// Status of the translation: "MT" = Machine Translation, "Approved" = Human-reviewed
+  status     String   @default("MT")
 }

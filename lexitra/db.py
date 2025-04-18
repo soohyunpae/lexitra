@@ -1,6 +1,9 @@
 import sqlite3
+import os
 
-DB_PATH = "app/database/translation_memory.db"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DB_PATH = os.path.join(BASE_DIR, "../prisma/data/dev.db")
+print("📁 실제 연결된 DB 경로:", DB_PATH)
 
 def get_db_connection():
     conn = sqlite3.connect(DB_PATH)

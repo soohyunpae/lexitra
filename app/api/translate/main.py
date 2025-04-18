@@ -4,6 +4,7 @@ import logging
 import os
 import openai
 from lexitra.tm import find_tm_match
+from lexitra.tm import save_tm_entry
 from datetime import datetime
 from dotenv import load_dotenv
 load_dotenv(dotenv_path=".env.local")
@@ -49,6 +50,15 @@ async def translate_endpoint(request: TranslationRequest):
         )
         logger.info("🧠 GPT 응답 전체: %s", response)
         gpt_translation = response.choices[0].message.content
+        # GPT 결과를 TM에 저장 (status = MT)
+        await save_tm_entry({
+            "source": request.text,
+            "target": gpt_translation.strip(),
+            "sourceLang": request.sourceLang,
+            "targetLang": request.targetLang,
+            "updatedAt": datetime.utcnow().isoformat(),
+            "status": "MT"
+        })
         return {"result": gpt_translation.strip(), "fromTM": False}
     except Exception as e:
         logger.error("❌ GPT 번역 실패: %s", e)

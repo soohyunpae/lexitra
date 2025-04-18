@@ -50,6 +50,23 @@ model TranslationMemory {
 - Edits and inserts are synced to Prisma and reflected via Studio or API
 - Fuzzy matching is handled in FastAPI, which reads directly from SQLite
 
+  ### TM 상태 구분 및 워크플로우
+
+  Lexitra의 번역 메모리(TM)는 다음과 같은 상태를 가지며, 각 상태는 워크플로우 상에서 다음 단계를 의미합니다:
+
+  - **MT (Machine Translation)**: GPT 등을 통해 자동 생성된 번역 결과. 기본적으로 수동 검토되지 않은 상태.
+  - **Approved**: 번역가/리뷰어가 검토하여 승인한 번역. TM에서 우선적으로 매칭 대상으로 간주됩니다.
+  - **Fuzzy**: 입력 문장과 기존 TM 간의 유사도가 100%가 아닌 경우. UI에서 별도 표시되어 사용자가 수동 확인할 수 있음.
+  - **Exact**: 입력 문장과 TM 내 source 문장이 완전히 일치하는 경우. 자동 적용 가능성이 높음.
+
+  이 상태 값은 TM 항목을 Prisma 모델에 저장할 때 `status` 필드를 통해 구분됩니다.
+
+  ### TM 상태 기반 저장 및 승인 워크플로우
+
+  - TM에서 일치하는 항목이 없는 경우, GPT 번역 결과를 생성하여 `status: "MT"`로 저장
+  - 번역자가 수동으로 검토 및 수정한 후, 해당 항목을 `status: "Approved"`로 업데이트
+  - 추후 UI에서 `status`별 필터링 및 승인 요청 워크플로우 등 확장 가능
+
 ---
 
 ## 5. Long-term Plan
@@ -59,6 +76,7 @@ model TranslationMemory {
 - Enable import/export of TM files (e.g. TMX format)
 - TM match logic can be moved fully into Next.js once performance is optimized
 - Replace SQLite with scalable DB for concurrent access
+- TM status 기반 승인/검수 프로세스 강화 및 필터링 기능 추가
 
 ---
 
@@ -73,7 +91,7 @@ model TranslationMemory {
 
 ---
 
-_Last updated: 2025-04-16_
+_Last updated: 2025-04-17_
 
 ---
 

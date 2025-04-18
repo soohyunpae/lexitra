@@ -39,3 +39,33 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# python
+__pycache__/
+*.pyc
+*.db
+
+# virtual environment
+venv/
+
+# macOS 시스템 파일
+*.DS_Store
+
+# VSCode 설정
+.vscode/
+
+# SQLite DB 파일들 (명확히 명시)
+*.sqlite3
+
+# Logs
+*.log
+
+# 환경설정 파일
+.env.local
+.env.development
+.env.production
+
+# 백업 파일
+*.bak
+*.swp
+*~

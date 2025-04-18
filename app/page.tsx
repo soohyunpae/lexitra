@@ -8,7 +8,6 @@ export default function HomePage() {
   return (
     <main className="min-h-screen bg-gray-50 p-10">
       <h1 className="text-3xl font-bold mb-8">Lexitra 대시보드</h1>
-
       <div className="grid gap-6 md:grid-cols-2">
         <Link href="/upload" className="p-6 bg-white rounded shadow hover:bg-blue-50">
           <h2 className="text-xl font-semibold mb-2">📄 문서 업로드 & 번역</h2>

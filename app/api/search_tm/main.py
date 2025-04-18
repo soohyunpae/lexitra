@@ -22,7 +22,7 @@ async def search_tm(
     try:
         results = db.execute(
             """
-            SELECT source, target, sourceLang, targetLang, updatedAt
+            SELECT source, target, sourceLang, targetLang, updatedAt, status
             FROM TranslationMemory
             WHERE sourceLang = :sourceLang
               AND targetLang = :targetLang
@@ -41,7 +41,8 @@ async def search_tm(
                 "target": row[1],
                 "sourceLang": row[2],
                 "targetLang": row[3],
-                "updatedAt": row[4]
+                "updatedAt": row[4],
+                "status": row[5]
             }
             for row in results
         ]

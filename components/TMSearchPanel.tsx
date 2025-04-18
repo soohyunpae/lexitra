@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import TMStatusBadge from './TMStatusBadge';
 
 export interface TMSearchResult {
   source: string;
@@ -9,13 +10,16 @@ export interface TMSearchResult {
   targetLang: string;
   updatedAt: string;
   score?: number; // 유사도 점수 (선택사항)
+  status?: string;
 }
 
 export interface TMSearchPanelProps {
   onSelect?: (result: TMSearchResult) => void;
+  sourceLang?: string;
+  targetLang?: string;
 }
 
-export default function TMSearchPanel({ onSelect }: TMSearchPanelProps) {
+export default function TMSearchPanel({ onSelect, sourceLang = 'ko', targetLang = 'en' }: TMSearchPanelProps) {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<TMSearchResult[]>([]);
   const [loading, setLoading] = useState(false);
@@ -27,9 +31,7 @@ export default function TMSearchPanel({ onSelect }: TMSearchPanelProps) {
     setError('');
     try {
       // Next.js 프록시 API 라우트 /api/search_tm 호출
-      const res = await fetch(
-        `http://127.0.0.1:8000/search-tm/?query=${encodeURIComponent(query)}&sourceLang=ko&targetLang=en`
-      );
+      const res = await fetch(`/api/search_tm?query=${encodeURIComponent(query)}&sourceLang=${sourceLang}&targetLang=${targetLang}`);
       const data = await res.json();
       if (Array.isArray(data)) {
         setResults(data);
@@ -42,7 +44,7 @@ export default function TMSearchPanel({ onSelect }: TMSearchPanelProps) {
     }
     setLoading(false);
   };
-
+console.log("✅ TMSearchPanel 렌더링됨");
   return (
     <div className="p-4 border-l border-gray-300 w-80 bg-gray-50">
       <div className="mb-4">
@@ -55,6 +57,7 @@ export default function TMSearchPanel({ onSelect }: TMSearchPanelProps) {
           placeholder="검색어를 입력하세요"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
+          onKeyDown={(e) => { if (e.key === 'Enter') handleSearch(); }}
         />
         <button
           className="bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-3 ml-2 rounded"
@@ -80,7 +83,12 @@ export default function TMSearchPanel({ onSelect }: TMSearchPanelProps) {
                   {item.target}
                 </p>
                 {item.score !== undefined && (
-                  <p className="text-xs text-gray-500">유사도: {item.score}%</p>
+                  <p className="text-xs text-gray-500">유사도: {Math.round(item.score)}%</p>
+                )}
+                {item.status && (
+                  <div className="mt-1">
+                    <TMStatusBadge status={item.status} />
+                  </div>
                 )}
                 <button
                   className="mt-1 w-full py-1 bg-gray-200 hover:bg-gray-300 text-xs text-gray-800 rounded"

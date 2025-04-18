@@ -48,7 +48,7 @@ def find_tm_match(text: str, source_lang: str, target_lang: str) -> dict:
         logger.info("TM 매치 없음. 최고 유사도: %.2f", best_score)
         return {"match": False, "score": round(best_score, 2), "target": ""}
 
-def save_tm_entry(source: str, target: str, source_lang: str, target_lang: str) -> None:
+def save_tm_entry(source: str, target: str, source_lang: str, target_lang: str, comment: str = "", status: str = "MT") -> None:
     """
     번역 결과를 TM(SQLite DB)에 저장하는 함수입니다.
     동일한 source/sourceLang/targetLang 조합이 이미 존재하면 업데이트, 없으면 삽입합니다.
@@ -71,11 +71,11 @@ def save_tm_entry(source: str, target: str, source_lang: str, target_lang: str) 
             WHERE id = ?
         """, (target, existing["id"]))
     else:
-        # 새 항목 삽입
+        # 새 항목 삽입 (status는 'MT'로 기본 설정)
         cursor.execute("""
-            INSERT INTO TranslationMemory (source, target, sourceLang, targetLang, updatedAt)
-            VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP)
-        """, (source, target, source_lang, target_lang))
+            INSERT INTO TranslationMemory (source, target, sourceLang, targetLang, comment, status, updatedAt)
+            VALUES (?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)
+        """, (source, target, source_lang, target_lang, comment, status))
 
     conn.commit()
     conn.close()
