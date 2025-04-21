@@ -1,5 +1,3 @@
-// app/page.tsx
-
 'use client'
 
 import Link from 'next/link'
@@ -23,6 +21,11 @@ export default function HomePage() {
         <Link href="/projects" className="p-6 bg-white dark:bg-gray-900 rounded shadow hover:bg-blue-50 dark:hover:bg-gray-800">
           <h2 className="text-xl font-semibold mb-2">📁 프로젝트 목록</h2>
           <p className="text-gray-600 dark:text-gray-300 text-sm">진행 중인 프로젝트를 확인하거나 새로 생성할 수 있습니다.</p>
+        </Link>
+        
+        <Link href="/termbase" className="p-6 bg-white dark:bg-gray-900 rounded shadow hover:bg-blue-50 dark:hover:bg-gray-800">
+          <h2 className="text-xl font-semibold mb-2">📚 용어집 관리</h2>
+          <p className="text-gray-600 dark:text-gray-300 text-sm">용어집을 등록하거나 업로드하고 항목을 수정·삭제할 수 있습니다.</p>
         </Link>
       </div>
     </main>

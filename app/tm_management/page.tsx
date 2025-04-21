@@ -65,7 +65,38 @@ export default function TMManagementPage() {
       console.error('TM 삭제 오류:', err);
     }
   };
-
+  
+  const [newSource, setNewSource] = useState('');
+  const [newTarget, setNewTarget] = useState('');
+  const [newComment, setNewComment] = useState('');
+  const [newStatus, setNewStatus] = useState('MT');
+  
+  const handleAddTM = async () => {
+    try {
+      const res = await fetch('/api/tm/add', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          source: newSource,
+          target: newTarget,
+          sourceLang: 'ko',
+          targetLang: 'en',
+          comment: newComment,
+          status: newStatus,
+        }),
+      });
+      const data = await res.json();
+      if (data.status === 'ok') {
+        fetchTMList();
+        setNewSource('');
+        setNewTarget('');
+        setNewComment('');
+      }
+    } catch (err) {
+      console.error('TM 추가 오류:', err);
+    }
+  };
+  
   return (
     <div className="p-6">
       <h1 className="text-2xl font-bold mb-4">TM 관리</h1>
@@ -92,6 +123,36 @@ export default function TMManagementPage() {
       </button>
       {loading && <p className="text-sm text-gray-500">로딩 중...</p>}
       {error && <p className="text-red-500">{error}</p>}
+      <div className="mb-6 border rounded p-4 bg-white dark:bg-gray-900">
+        <h2 className="text-lg font-semibold mb-2">TM 수동 등록</h2>
+        <input
+          type="text"
+          value={newSource}
+          onChange={(e) => setNewSource(e.target.value)}
+          placeholder="원문"
+          className="border p-2 rounded w-full mb-2"
+        />
+        <input
+          type="text"
+          value={newTarget}
+          onChange={(e) => setNewTarget(e.target.value)}
+          placeholder="번역문"
+          className="border p-2 rounded w-full mb-2"
+        />
+        <input
+          type="text"
+          value={newComment}
+          onChange={(e) => setNewComment(e.target.value)}
+          placeholder="코멘트 (선택)"
+          className="border p-2 rounded w-full mb-2"
+        />
+        <button
+          onClick={handleAddTM}
+          className="px-4 py-2 bg-blue-600 text-white rounded"
+        >
+          등록
+        </button>
+      </div>
       <ul className="space-y-3">
         {tmList.map((item, idx) => (
           <li key={idx} className="p-3 border rounded bg-gray-50">
