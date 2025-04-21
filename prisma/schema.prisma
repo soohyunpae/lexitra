@@ -18,3 +18,11 @@ model TranslationMemory {
   updatedAt  DateTime @updatedAt
   comment     String?
 }
+
+model Project {
+  id         Int      @id @default(autoincrement())
+  name       String
+  note       String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}

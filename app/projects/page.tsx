@@ -104,58 +104,62 @@ export default function ProjectsPage() {
       <h1 className="text-2xl font-bold mb-4">📋 프로젝트 목록</h1>
 
       {/* 프로젝트 생성 폼 */}
-      <div className="mb-6 p-4 bg-white shadow-md rounded-lg">
-        <h2 className="text-xl font-semibold mb-3">프로젝트 생성</h2>
-        <input
-          type="text"
-          className="border px-4 py-2 rounded w-full mb-3"
-          placeholder="프로젝트 이름"
-          value={newProjectName}
-          onChange={(e) => setNewProjectName(e.target.value)}
-        />
-        <textarea
-          className="border px-4 py-2 rounded w-full mb-3"
-          placeholder="프로젝트 설명"
-          value={newProjectNote}
-          onChange={(e) => setNewProjectNote(e.target.value)}
-        />
+      <div className="p-6">
+        <h1 className="text-2xl font-bold mb-4">프로젝트 생성</h1>
+
+        <div className="mb-4 space-y-3">
+          <input
+            type="text"
+            placeholder="프로젝트 이름"
+            value={newProjectName}
+            onChange={(e) => setNewProjectName(e.target.value)}
+            className="border p-2 rounded w-full"
+          />
+          <textarea
+            placeholder="프로젝트 설명"
+            value={newProjectNote}
+            onChange={(e) => setNewProjectNote(e.target.value)}
+            className="border p-2 rounded w-full"
+          />
+        </div>
+
         <button
           onClick={handleCreateProject}
-          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+          className="px-4 py-2 bg-blue-600 text-white rounded"
         >
           프로젝트 생성
         </button>
       </div>
 
       {/* 프로젝트 목록 테이블 */}
-      <div className="overflow-x-auto bg-white shadow-sm rounded-md mb-6">
-        <table className="w-full text-sm table-auto border-collapse">
-          <thead className="bg-gray-100">
+      <div className="overflow-x-auto p-6 bg-gray-900 shadow-sm rounded-md mb-6">
+        <table className="w-full text-sm table-auto border-collapse text-gray-800 dark:text-white">
+          <thead className="bg-gray-100 dark:bg-gray-800">
             <tr>
-              <th className="border p-2 text-left">프로젝트 이름</th>
-              <th className="border p-2 text-left">설명</th>
-              <th className="border p-2 text-left">생성일</th>
-              <th className="border p-2 text-left">수정일</th>
-              <th className="border p-2 text-left">관리</th>
+              <th className="border p-2 text-left text-gray-800 dark:text-white">프로젝트 이름</th>
+              <th className="border p-2 text-left text-gray-800 dark:text-white">설명</th>
+              <th className="border p-2 text-left text-gray-800 dark:text-white">생성일</th>
+              <th className="border p-2 text-left text-gray-800 dark:text-white">수정일</th>
+              <th className="border p-2 text-left text-gray-800 dark:text-white">관리</th>
             </tr>
           </thead>
           <tbody>
-            {projects.map((project) => (
-              <tr key={project.id} className="border-t">
-                <td className="p-2">{project.name}</td>
-                <td className="p-2">{project.note}</td>
-                <td className="p-2">{new Date(project.createdAt).toLocaleString()}</td>
-                <td className="p-2">{new Date(project.updatedAt).toLocaleString()}</td>
-                <td className="p-2">
+              {projects.map((project) => (
+              <tr key={project.id} className="border-t dark:border-gray-700">
+                <td className="p-2 text-gray-800 dark:text-white">{project.name}</td>
+                <td className="p-2 text-gray-800 dark:text-white">{project.note}</td>
+                <td className="p-2 text-gray-800 dark:text-white">{new Date(project.createdAt).toLocaleString()}</td>
+                <td className="p-2 text-gray-800 dark:text-white">{new Date(project.updatedAt).toLocaleString()}</td>
+                <td className="p-2 text-gray-800 dark:text-white">
                   <button
                     onClick={() => setSelectedProject(project)}
-                    className="text-blue-600 hover:underline mr-2"
+                    className="text-blue-600 dark:text-blue-400 hover:underline mr-2"
                   >
                     수정
                   </button>
                   <button
                     onClick={() => handleDeleteProject(project.id)}  // 삭제 버튼 클릭 시 삭제 처리
-                    className="text-red-600 hover:underline"
+                    className="text-red-600 dark:text-red-400 hover:underline"
                   >
                     삭제
                   </button>
@@ -168,33 +172,37 @@ export default function ProjectsPage() {
 
       {/* 프로젝트 수정 폼 */}
       {selectedProject && (
-        <div className="bg-white p-4 shadow-md rounded-lg">
-          <h2 className="text-xl font-semibold mb-3">프로젝트 수정</h2>
-          <input
-            type="text"
-            className="border px-4 py-2 rounded w-full mb-3"
-            value={selectedProject.name}
-            onChange={(e) => setSelectedProject({ ...selectedProject, name: e.target.value })}
-          />
-          <textarea
-            className="border px-4 py-2 rounded w-full mb-3"
-            value={selectedProject?.note || ""} // selectedProject가 null이면 빈 문자열을 사용
-            onChange={(e) =>
-              setSelectedProject({
-                ...selectedProject,
-                note: e.target.value,
+        <div className="p-6 bg-gray-900 shadow-md rounded-lg">
+          <h2 className="text-2xl font-bold mb-4 text-white">프로젝트 수정</h2>
+
+          <div className="mb-4 space-y-3">
+            <input
+              type="text"
+              className="border p-2 rounded w-full text-white bg-gray-800 placeholder-gray-500"
+              value={selectedProject.name}
+              onChange={(e) => setSelectedProject({ ...selectedProject, name: e.target.value })}
+            />
+            <textarea
+              className="border p-2 rounded w-full text-white bg-gray-800 placeholder-gray-500"
+              value={selectedProject?.note || ""}
+              onChange={(e) =>
+                setSelectedProject({
+                  ...selectedProject,
+                  note: e.target.value,
                 })
               }
-          />
+            />
+          </div>
+
           <button
             onClick={() => handleUpdateProject(selectedProject.id, selectedProject.name, selectedProject.note)}
-            className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+            className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
           >
             수정 완료
           </button>
           <button
             onClick={() => setSelectedProject(null)}
-            className="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700 ml-2"
+            className="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700 ml-2"
           >
             취소
           </button>
