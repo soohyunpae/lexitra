@@ -67,9 +67,9 @@ def save_tm_entry(source: str, target: str, source_lang: str, target_lang: str, 
         # 기존 항목 업데이트
         cursor.execute("""
             UPDATE TranslationMemory 
-            SET target = ?, updatedAt = CURRENT_TIMESTAMP 
+            SET target = ?, comment = ?, status = ?, updatedAt = CURRENT_TIMESTAMP 
             WHERE id = ?
-        """, (target, existing["id"]))
+        """, (target, comment, status, existing["id"]))
     else:
         # 새 항목 삽입 (status는 'MT'로 기본 설정)
         cursor.execute("""

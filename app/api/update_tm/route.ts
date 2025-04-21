@@ -1,4 +1,6 @@
+import type { TmEntry } from '@/lib/types';
 import { NextResponse } from 'next/server';
+import { upsertTmEntry } from '@/lib/tmUtils';
 
 // ✅ 유니코드 정규화 + 공백 정리 함수
 function normalizeText(s: string): string {
@@ -12,31 +14,40 @@ export async function POST(req: Request) {
   try {
     const body = await req.json();
     console.log('Request Body:', body);
-    
-    if (!body.status) {
-      body.status = 'Approved';
-    }
-    body.status = normalizeText(body.status);
+    console.log('🧾 업데이트 요청 전체:', body);
 
-    const apiRes = await fetch('http://127.0.0.1:8000/update-tm/', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ entries: [body] }),
-    });
+    const {
+      source,
+      target,
+      sourceLang,
+      targetLang,
+      status = 'Approved',
+      comment = '',
+    } = body;
 
-    if (!apiRes.ok) {
-      const text = await apiRes.text();
-      console.error('FastAPI 응답 오류:', text);
-      return NextResponse.json({ message: 'TM 업데이트 실패' }, { status: 500 });
+    console.log('📦 status 확인:', status);
+
+    if (!source || !target || !sourceLang || !targetLang) {
+      return NextResponse.json({ message: '필수 필드 누락' }, { status: 400 });
     }
 
-    const data = await apiRes.json();
-    return NextResponse.json({ status: 'ok', data });
+    const normalizedPayload = {
+      source: normalizeText(source),
+      sourceLang: normalizeText(sourceLang),
+      targetLang: normalizeText(targetLang),
+      target: normalizeText(target),
+      status,
+      comment: normalizeText(comment),
+      updatedAt: new Date(),
+    };
 
+    console.log('📤 TM 업데이트 전송:', normalizedPayload);
+
+    await upsertTmEntry(normalizedPayload as TmEntry); 
+
+    return NextResponse.json({ status: 'ok' });
   } catch (error) {
-    console.error('TM 업데이트 프록시 오류:', error);
+    console.error('TM 업데이트 오류:', error);
     return NextResponse.json({ message: 'TM 업데이트 실패' }, { status: 500 });
   }
 }

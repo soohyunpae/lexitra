@@ -1,10 +1,18 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 
-export async function GET() {
+export async function GET(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const status = searchParams.get('status') ?? undefined;
+  const take = parseInt(searchParams.get('take') || '100', 10);
+  const skip = parseInt(searchParams.get('skip') || '0', 10);
+
   try {
-    const tmList = await prisma.TranslationMemory.findMany({
-      orderBy: { updatedAt: 'desc' }, // 최근 수정된 순서대로 정렬
+    const tmList = await prisma.translationMemory.findMany({
+      where: status ? { status } : undefined,
+      orderBy: { updatedAt: 'desc' },
+      take,
+      skip,
     });
     return NextResponse.json(tmList);
   } catch (error) {

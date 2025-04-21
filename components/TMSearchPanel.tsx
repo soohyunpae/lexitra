@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
+import { useTMSearch } from '@/hooks/useTMSearch';
 import TMStatusBadge from './TMStatusBadge';
 
 export interface TMSearchResult {
@@ -20,31 +21,14 @@ export interface TMSearchPanelProps {
 }
 
 export default function TMSearchPanel({ onSelect, sourceLang = 'ko', targetLang = 'en' }: TMSearchPanelProps) {
-  const [query, setQuery] = useState('');
-  const [results, setResults] = useState<TMSearchResult[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const {
+    query, setQuery,
+    results,
+    loading,
+    error,
+    handleSearch,
+  } = useTMSearch(sourceLang, targetLang);
 
-  const handleSearch = async () => {
-    if (!query.trim()) return;
-    setLoading(true);
-    setError('');
-    try {
-      // Next.js 프록시 API 라우트 /api/search_tm 호출
-      const res = await fetch(`/api/search_tm?query=${encodeURIComponent(query)}&sourceLang=${sourceLang}&targetLang=${targetLang}`);
-      const data = await res.json();
-      if (Array.isArray(data)) {
-        setResults(data);
-      } else {
-        setError('검색 결과 형식이 올바르지 않습니다.');
-      }
-    } catch (err) {
-      console.error('TMSearchPanel handleSearch error:', err);
-      setError('검색 중 오류가 발생했습니다.');
-    }
-    setLoading(false);
-  };
-console.log("✅ TMSearchPanel 렌더링됨");
   return (
     <div className="p-4 border-l border-gray-300 w-80 bg-gray-50">
       <div className="mb-4">

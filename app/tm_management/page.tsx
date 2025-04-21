@@ -2,8 +2,9 @@
 
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-import Modal from '../../components/Modal';
-import TMEditForm from '@/components/TMEditForm';
+import TMStatusBadge from '@/components/TMStatusBadge';
+// Removed unused Modal and TMEditForm imports
+import { useTMSearch } from '@/hooks/useTMSearch';
 
 // TM 데이터 인터페이스 선언
 interface TMEntry {
@@ -17,82 +18,32 @@ interface TMEntry {
 }
 
 export default function TMManagementPage() {
-  const [tmList, setTmList] = useState<TMEntry[]>([]);
-  const [query, setQuery] = useState('');
-  const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
+  const {
+    query,
+    setQuery,
+    results: tmList,
+    loading,
+    error,
+    handleSearch: fetchTMList,
+  } = useTMSearch('ko', 'en');
   // 모달 관련 상태: 수정할 항목과 모달 열림 여부
-  const [editModalOpen, setEditModalOpen] = useState(false);
-  const [currentEditItem, setCurrentEditItem] = useState<TMEntry | null>(null);
+  // Removed modal related state
 
-  const fetchTMList = async () => {
-    setLoading(true);
-    setError('');
-    try {
-      let data = [];
-
-      if (query.trim() === '') {
-        const res = await fetch('/api/tm/list');
-        data = await res.json();
-      } else {
-        const res = await fetch(
-          `http://127.0.0.1:8000/search-tm?query=${encodeURIComponent(query)}&sourceLang=ko&targetLang=en`
-        );
-        if (!res.ok) {
-          throw new Error(`HTTP ${res.status}`);
-        }
-        data = await res.json();
-      }
-
-      const validData = Array.isArray(data)
-        ? data.filter(
-            (entry: any) =>
-              entry.source && entry.target && entry.sourceLang && entry.targetLang
-          )
-        : [];
-
-      setTmList(validData);
-    } catch (err) {
-      console.error('TM 목록 로드 오류:', err);
-      setError('TM 목록 로드 실패');
-    }
-    setLoading(false);
-  };
-
-  useEffect(() => {
-    const loadInitialTM = async () => {
-      setLoading(true);
-      try {
-        const res = await fetch('/api/tm/list');
-        const data = await res.json();
-        if (Array.isArray(data)) {
-          setTmList(data);
-        } else {
-          console.error('[Initial TM Load] 응답 형식 오류:', data);
-          setError('초기 TM 데이터를 불러오지 못했습니다.');
-        }
-      } catch (err) {
-        console.error('[Initial TM Load] 오류:', err);
-        setError('초기 TM 데이터를 불러오지 못했습니다.');
-      }
-      setLoading(false);
-    };
-
-    loadInitialTM();
-  }, []);
-
-  // 수정 버튼을 누르면 모달을 열고, 해당 항목을 설정합니다.
+  // 수정 버튼을 누르면 새 창에서 편집 페이지를 엽니다.
   const handleEdit = (item: TMEntry) => {
-    setCurrentEditItem(item);
-    setEditModalOpen(true);
+    const query = new URLSearchParams({
+      source: item.source,
+      target: item.target,
+      sourceLang: item.sourceLang,
+      targetLang: item.targetLang,
+      status: item.status || '',
+      comment: item.comment || '',
+    }).toString();
+
+    window.open(`/tm_management/edit?${query}`, '_blank', 'width=600,height=600');
   };
 
-  // 모달에서 업데이트 후, 목록 새로고침을 위해 콜백 처리
-  const handleUpdate = () => {
-    setEditModalOpen(false);
-    setCurrentEditItem(null);
-    fetchTMList();
-  };
+  // Removed unused handleUpdate function
 
   // 삭제 기능 예시
   const handleDelete = async (item: TMEntry) => {
@@ -146,7 +97,12 @@ export default function TMManagementPage() {
           <li key={idx} className="p-3 border rounded bg-gray-50">
             <p className="text-sm font-semibold text-gray-800">원문: {item.source}</p>
             <p className="text-sm text-gray-600">번역: {item.target}</p>
-            <p className="text-xs text-gray-500">
+            {item.status && (
+              <div className="mt-1">
+                <TMStatusBadge status={item.status} />
+              </div>
+            )}
+            <p className="text-xs text-gray-500 mt-1">
               {item.sourceLang} → {item.targetLang} / {item.updatedAt}
             </p>
             <div className="flex gap-2 mt-2">
@@ -170,17 +126,7 @@ export default function TMManagementPage() {
         )}
       </ul>
 
-      {/* TM 편집 모달 */}
-      <Modal open={editModalOpen} onClose={() => setEditModalOpen(false)}>
-        {currentEditItem && (
-          <TMEditForm
-            initialSource={currentEditItem.source}
-            initialTarget={currentEditItem.target}
-            initialComment={currentEditItem.comment || ''}
-            onUpdate={handleUpdate}
-          />
-        )}
-      </Modal>
+      {/* Removed Modal section as editing is handled in a popup window */}
     </div>
   );
 }

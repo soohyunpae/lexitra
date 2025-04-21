@@ -1,4 +1,3 @@
-# lexitra/db/tm.py
 from prisma import PrismaClient
 import difflib
 from lexitra.logger import setup_logger
@@ -75,7 +74,9 @@ async def save_tm_entry(record: dict) -> None:
         },
         data={
             "target": record["target"],
-            "updatedAt": record["updatedAt"]  # 기록된 값 또는 datetime.now() 등을 사용할 수 있음
+            "comment": record.get("comment"),
+            "status": record.get("status"),
+            "updatedAt": record["updatedAt"]
         }
     )
     if updated["count"] == 0:
@@ -86,6 +87,8 @@ async def save_tm_entry(record: dict) -> None:
                 "target": record["target"],
                 "sourceLang": record["sourceLang"],
                 "targetLang": record["targetLang"],
+                "comment": record.get("comment"),
+                "status": record.get("status"),
                 "updatedAt": record["updatedAt"],
             }
         })

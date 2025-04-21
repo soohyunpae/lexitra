@@ -43,7 +43,8 @@ next-env.d.ts
 # python
 __pycache__/
 *.pyc
-*.db
+# *.db  ← 주석처리하거나 삭제
+!prisma/dev.db  # prisma/dev.db는 git에 포함
 
 # virtual environment
 venv/
@@ -69,3 +70,6 @@ venv/
 *.bak
 *.swp
 *~
+
+# Ignore Prisma local SQLite DB
+prisma/data/dev.db

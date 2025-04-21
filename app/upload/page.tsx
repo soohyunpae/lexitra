@@ -12,6 +12,7 @@ export default function UploadPage() {
   const [saved, setSaved] = useState<boolean[]>([])
   const [modified, setModified] = useState<boolean[]>([])
   const [selectedFileName, setSelectedFileName] = useState('')
+  const [originals, setOriginals] = useState<string[]>([])
 
   // useRef를 활용해 파일 입력(input type="file") 요소를 컨트롤
   const fileInputRef = useRef<HTMLInputElement>(null)
@@ -69,6 +70,7 @@ export default function UploadPage() {
 
     setTranslations(newTranslations)
     setTmMatches(newMatches)
+    setOriginals(newTranslations)
     setLoading(false)
   }
 
@@ -94,16 +96,13 @@ export default function UploadPage() {
       const res = await fetch('/api/update_tm', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          entries: [
-            {
-              source,
-              target,
-              sourceLang: 'ko',
-              targetLang: 'en',
-              updatedAt: new Date().toISOString(),
-            },
-          ],
+      body: JSON.stringify({
+          source,
+          target,
+          sourceLang: 'ko',
+          targetLang: 'en',
+          status: 'MT',
+          comment: '',
         }),
       })
       const data = await res.json()
@@ -125,7 +124,7 @@ export default function UploadPage() {
     // 되돌리기: 기존에 TM 매치 결과가 있으면 해당 값을 사용
     const newTranslations = [...translations]
     // 만약 TM 매치 결과가 없다면, 원본 문장으로 되돌리거나 GPT 번역 결과를 이용할 수 있습니다.
-    newTranslations[idx] = tmMatches[idx]?.target || segments[idx] || ''
+    newTranslations[idx] = originals[idx] || tmMatches[idx]?.target || segments[idx] || ''
     setTranslations(newTranslations)
     const newModified = [...modified]
     newModified[idx] = false

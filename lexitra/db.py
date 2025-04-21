@@ -2,7 +2,7 @@ import sqlite3
 import os
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-DB_PATH = os.path.join(BASE_DIR, "../prisma/data/dev.db")
+DB_PATH = os.path.join(BASE_DIR, "../prisma/dev.db")
 print("📁 실제 연결된 DB 경로:", DB_PATH)
 
 def get_db_connection():

@@ -8,10 +8,12 @@ interface TMEditFormProps {
   initialTarget: string;
   initialComment?: string;
   initialStatus?: string;
-  onUpdate: () => void;
+  onUpdate?: () => void;
+  sourceLang?: string;
+  targetLang?: string;
 }
 
-export default function TMEditForm({ initialSource, initialTarget, initialComment, initialStatus, onUpdate }: TMEditFormProps) {
+export default function TMEditForm({ initialSource, initialTarget, initialComment, initialStatus, onUpdate, sourceLang, targetLang }: TMEditFormProps) {
   const router = useRouter();
   const [target, setTarget] = useState(initialTarget);
   const [comment, setComment] = useState(initialComment || '');
@@ -32,13 +34,13 @@ export default function TMEditForm({ initialSource, initialTarget, initialCommen
           target,
           comment,
           status,
-          sourceLang: 'ko',
-          targetLang: 'en',
+          sourceLang: sourceLang || 'ko',
+          targetLang: targetLang || 'en',
         }),
       });
       const data = await res.json();
       if (data.status === 'ok') {
-        onUpdate();
+        onUpdate?.();
       } else {
         setError('업데이트에 실패했습니다.');
       }

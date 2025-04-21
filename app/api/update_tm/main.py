@@ -34,7 +34,7 @@ async def update_tm(request: Request):
                 source_lang=entry.get("sourceLang"),
                 target_lang=entry.get("targetLang"),
                 comment=entry.get("comment"),
-                status=entry.get("status")
+                status=entry.get("status")  # Ensure status is being passed correctly
             )
         return {"status": "ok"}
     except Exception as e:

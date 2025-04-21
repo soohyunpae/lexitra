@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { prisma } from '@/lib/prisma';
 
 export async function GET(request: Request) {
   try {
@@ -11,28 +12,23 @@ export async function GET(request: Request) {
       return NextResponse.json([]);
     }
 
-    const endpoint = process.env.PYTHON_SEARCH_TM_ENDPOINT || 'http://127.0.0.1:8000/search-tm';
-    const fullUrl = `${endpoint}?query=${encodeURIComponent(query)}&sourceLang=${sourceLang}&targetLang=${targetLang}`;
-    console.log('[search-tm] 요청 URL:', fullUrl);
+    const results = await prisma.translationMemory.findMany({
+      where: {
+        source: {
+          contains: query,
+        },
+        sourceLang,
+        targetLang,
+      },
+      orderBy: {
+        updatedAt: 'desc',
+      },
+      take: 20,
+    });
 
-    const response = await fetch(fullUrl);
-    const text = await response.text();
-
-    if (!response.ok) {
-      console.error('[search-tm] 응답 에러 상태:', response.status, text);
-      return NextResponse.json({ error: 'FastAPI 서버 응답 오류', status: response.status }, { status: 502 });
-    }
-
-    try {
-      const data = JSON.parse(text);
-      console.log('[search-tm] 응답 데이터:', data);
-      return NextResponse.json(data);
-    } catch (parseErr) {
-      console.error('[search-tm] JSON 파싱 실패:', parseErr, text);
-      return NextResponse.json({ error: '응답 JSON 파싱 오류' }, { status: 502 });
-    }
+    return NextResponse.json(results);
   } catch (error) {
-    console.error('[search-tm] TM 검색 프록시 에러:', error);
+    console.error('[search-tm] Prisma 기반 검색 오류:', error);
     return NextResponse.json({ error: 'TM 검색 실패' }, { status: 500 });
   }
 }

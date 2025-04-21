@@ -27,6 +27,9 @@ model TranslationMemory {
   sourceLang  String
   targetLang  String
   updatedAt   DateTime @updatedAt
+  status      String   @default("MT")
+  createdAt   DateTime @default(now())
+  approvedAt  DateTime?
 }
 ```
 
@@ -71,6 +74,35 @@ model TranslationMemory {
 
 ## 5. Long-term Plan
 
+---
+
+## 6. Integrated Transition Strategy (TS → Python)
+
+Lexitra는 초기 개발 단계에서 TypeScript 기반의 Prisma/Next.js 구조를 사용해 빠르게 기능을 구현하였으며, 이후 자연어 처리 및 GPT API 연동의 효율성을 위해 Python 백엔드로 점진적인 전환을 계획하고 있습니다. 본 전략은 이중 구조를 일시적으로 유지하면서 안정적인 전환을 달성하기 위한 방향성을 제공합니다.
+
+### 🔹 단기: TypeScript 기반 구조 안정화
+
+- Prisma ORM 기반으로 TranslationMemory 관리 통합
+- FastAPI 호출 대신 Next.js API Route로 대체
+- `/tm_management` 및 관련 API 구조 정비 및 정리
+- GPT 호출은 FastAPI에서 수행, 프론트에서는 프록시 형태로 연동
+
+### 🔹 중기: Python 백엔드 기능 확장
+
+- FastAPI 기반 번역 API를 고도화
+- GPT API 호출 + TM 저장/검색 로직을 Python에서 처리
+- Python의 자연어 처리 라이브러리 활용 가능성 탐색
+- `lib/tmUtils.ts`에 있는 기능들을 Python으로 점진 이전
+
+### 🔹 장기: 백엔드 Python 단일화
+
+- 번역, TM 관리, GPT 연동 기능을 Python에서 일원화
+- 프론트에서는 Python API만 호출하고 UI에 집중
+- FastAPI 또는 Flask 기반 API 서버를 정식 백엔드로 구성
+- 기존 TypeScript API Route는 점진적으로 제거
+
+이러한 전략을 통해 단기적으로는 기존 시스템의 안정성을 유지하면서도, 중장기적으로는 자연어 처리에 강점을 가진 Python 환경으로의 전환을 무리 없이 진행할 수 있습니다.
+
 - Optional migration to PostgreSQL or MySQL in production
 - Add user/project ownership fields for multi-user support
 - Enable import/export of TM files (e.g. TMX format)
@@ -80,7 +112,7 @@ model TranslationMemory {
 
 ---
 
-## 6. Notes
+## 7. Notes
 
 - Make sure `.env` has correct `DATABASE_URL` (e.g., `file:./dev.db`)
 - After updating schema, always run:
@@ -95,7 +127,7 @@ _Last updated: 2025-04-17_
 
 ---
 
-## 7. Refactoring Roadmap (2025-04-16 기준)
+## 8. Refactoring Roadmap (2025-04-16 기준)
 
 이 리팩토링 로드맵은 기존에 FastAPI, Prisma, sqlite 등 혼재된 DB 구조를 통합하고, 안정적인 서버 실행과 유지보수를 위한 가이드를 포함합니다.
 
@@ -118,7 +150,16 @@ _Last updated: 2025-04-17_
 - [ ] `TMEditForm`, `TMSearchPanel`: API 연동 코드 일관화
 - [ ] `lib/searchTranslationMemory.ts`: FastAPI 또는 DB API로 통일
 
-#### 4. 정리 및 최적화
+#### 4. 기능 중복 정리
+- [ ] `app/tm`, `app/tm_management`, `components` 폴더 내 중복된 기능 정리
+  - `app/tm`: TM 관련 API 로직만 유지
+  - `app/tm_management`: TM 관리 UI 및 페이지 관련 코드만 유지
+  - `components`: 공통 UI 컴포넌트로 분리
+- [ ] 중복된 TM 상태 관리 로직을 `lib/tmStatus.ts`로 이동
+- [ ] `app/tm_management`에서 `components`와 `lib/tmStatus.ts`를 활용하도록 수정
+- [ ] 불필요한 파일 및 폴더 삭제
+
+#### 5. 정리 및 최적화
 - [ ] 사용하지 않는 API 정리 (예: `/search_tm`, `/check_tm` 등 중복 제거)
 - [ ] Prisma client 에러 없는지 확인
 - [ ] DB 스키마 및 테스트 데이터 재정비

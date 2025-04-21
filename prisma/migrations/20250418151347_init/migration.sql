@@ -5,5 +5,8 @@ CREATE TABLE "TranslationMemory" (
     "target" TEXT NOT NULL,
     "sourceLang" TEXT NOT NULL,
     "targetLang" TEXT NOT NULL,
-    "updatedAt" DATETIME NOT NULL
+    "status" TEXT NOT NULL DEFAULT 'MT',
+    "projectName" TEXT,
+    "updatedAt" DATETIME NOT NULL,
+    "comment" TEXT
 );
