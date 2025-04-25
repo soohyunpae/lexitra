@@ -44,8 +44,12 @@ export default function TMEditForm({ initialSource, initialTarget, initialCommen
       } else {
         setError('업데이트에 실패했습니다.');
       }
-    } catch (err) {
-      console.error(err);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        console.error(err.message);
+      } else {
+        console.error('Unknown error:', err);
+      }
       setError('업데이트 중 오류가 발생했습니다.');
     }
     setLoading(false);
@@ -87,10 +91,10 @@ export default function TMEditForm({ initialSource, initialTarget, initialCommen
           onChange={(e) => setStatus(e.target.value)}
           className="w-full border p-2 rounded text-sm"
         >
-          <option value="MT">MT (Machine Translated)</option>
-          <option value="Fuzzy">Fuzzy Match</option>
-          <option value="Exact">Exact Match</option>
-          <option value="Approved">Approved</option>
+          <option value="MT">MT</option>
+          <option value="Fuzzy">Fuzzy</option>
+          <option value="100%">100%</option>
+          <option value="Reviewed">Reviewed</option>
         </select>
       </div>
       {error && <p className="text-red-500 text-sm">{error}</p>}

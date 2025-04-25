@@ -55,10 +55,9 @@ export default function TMTable({ entries, filePath }: { entries: any[]; filePat
           </tr>
         </thead>
         <tbody>
-          {filtered.map((entry, idx) => {
-            console.log("🔎 TM Entry:", entry);
-            return (
-              <tr key={idx} className="hover:bg-gray-50">
+          {filtered.map((entry, idx) => (
+            <tr key={idx} className="hover:bg-gray-50">
+              {/* console.log removed to avoid JSX syntax issue */}
               <td className="border px-2 py-1 align-top whitespace-pre-wrap">{entry.source}</td>
               <td className="border px-2 py-1 align-top whitespace-pre-wrap">
                 {entry.target}
@@ -86,7 +85,7 @@ export default function TMTable({ entries, filePath }: { entries: any[]; filePat
                 {entry.comment || ''}
               </td>
             </tr>
-          })}
+          ))}
         </tbody>
       </table>
     {selectedEntry && (

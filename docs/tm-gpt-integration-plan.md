@@ -40,7 +40,7 @@ Enable GPT to **reference relevant TM entries before generating a translation**.
 
 - **All TM storage and querying consolidated in Prisma**  
 - **GPT translation endpoint accepts top-N TM matches** as input  
-- GPT is prompted with TM context (e.g., fuzzy matches, approved entries)  
+- GPT is prompted with TM context (e.g., fuzzy matches, reviewed entries)  
 - Fuzzy match logic powered by embedding or keyword similarity
 
 ---
@@ -63,7 +63,7 @@ Now translate:
 
 ### Phase 1 – Core TM Consolidation (🟢 In Progress)
 - ✅ Migrate all TM read/write logic to Prisma  
-- ✅ Ensure status (`MT`, `Fuzzy`, `Exact`, `Approved`) is stored  
+- ✅ Ensure status (`MT`, `Fuzzy`, `100%`, `Reviewed`) is stored  
 - ✅ Standardize API access via `/api/update_tm`, `/api/search_tm`
 
 ### Phase 2 – TM Filtering & Embedding Support
@@ -78,7 +78,7 @@ Now translate:
 
 ### Phase 4 – Workflow Automation
 - [ ] Auto-suggest TM matches before GPT call  
-- [ ] Use `status: Approved` entries only for prompting  
+- [ ] Use `status: Reviewed` entries only for prompting  
 - [ ] Enable real-time feedback loop from reviewers
 
 ---
@@ -88,7 +88,7 @@ Now translate:
 Moving GPT closer to TM will enable Lexitra to:
 
 - Improve translation consistency  
-- Maximize reuse of existing human-approved translations  
+- Maximize reuse of existing human-reviewed translations  
 - Scale confidently for professional/legal content
 
 This phased plan ensures we build on stable TM foundations while enabling smarter LLM usage.
@@ -108,7 +108,7 @@ This section outlines the actionable steps to implement the TM-aware GPT integra
 - [ ] Evaluate `/api/search_tm` FastAPI vs Prisma route, consolidate as needed
 ### 🔹 Phase 2: Pre-GPT Integration Layer
 - [ ] Design reusable top-N TM match function (`getTopMatches`)
-- [ ] Filter matches by `status: Approved` or `Fuzzy`
+- [ ] Filter matches by `status: Reviewed` or `Fuzzy`
 - [ ] Define JSON format for GPT input TM context
 - [ ] Test and refine GPT prompts with TM reference included
 ### 🔹 Phase 3: Embedding-Based Matching
@@ -118,7 +118,7 @@ This section outlines the actionable steps to implement the TM-aware GPT integra
 - [ ] Incorporate similarity scores into GPT prompts (optional)
 ### 🔹 Phase 4: Feedback & Automation
 - [ ] Auto-suggest TM matches before GPT is called
-- [ ] Store reviewed GPT outputs with `status: Approved`
+- [ ] Store reviewed GPT outputs with `status: Reviewed`
 - [ ] Build feedback loop for TM and reviewer integration
 
 ---

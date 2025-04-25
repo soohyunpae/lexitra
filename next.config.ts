@@ -5,6 +5,9 @@ const nextConfig: NextConfig = {
   typescript: {
     tsconfigPath: './tsconfig.json',
   },
+  env: {
+    BASE_URL: process.env.BASE_URL,
+  },
 };
 
 export default nextConfig;

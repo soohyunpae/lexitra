@@ -61,8 +61,10 @@ export default function TMManagementPage() {
       if (data.status === 'ok') {
         fetchTMList();
       }
-    } catch (err) {
-      console.error('TM 삭제 오류:', err);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        console.error('TM 삭제 오류:', err.message);
+      }
     }
   };
   
@@ -92,8 +94,10 @@ export default function TMManagementPage() {
         setNewTarget('');
         setNewComment('');
       }
-    } catch (err) {
-      console.error('TM 추가 오류:', err);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        console.error('TM 추가 오류:', err.message);
+      }
     }
   };
   
@@ -146,6 +150,16 @@ export default function TMManagementPage() {
           placeholder="코멘트 (선택)"
           className="border p-2 rounded w-full mb-2"
         />
+        <select
+          value={newStatus}
+          onChange={(e) => setNewStatus(e.target.value)}
+          className="border p-2 rounded w-full mb-2"
+        >
+          <option value="MT">MT</option>
+          <option value="Reviewed">Reviewed</option>
+          <option value="100%">100%</option>
+          <option value="Fuzzy">Fuzzy</option>
+        </select>
         <button
           onClick={handleAddTM}
           className="px-4 py-2 bg-blue-600 text-white rounded"

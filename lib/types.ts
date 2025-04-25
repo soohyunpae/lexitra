@@ -1,3 +1,5 @@
+export type TMStatus = 'MT' | 'Fuzzy' | 'Reviewed' | '100%';
+
 // /lib/types.ts
 export interface TmEntry {
     id?: number;
@@ -5,7 +7,7 @@ export interface TmEntry {
     target: string;
     sourceLang: string;
     targetLang: string;
-    status?: string;
+    status?: TMStatus;
     comment?: string;
-    updatedAt?: Date;
+    updatedAt?: string;
   }

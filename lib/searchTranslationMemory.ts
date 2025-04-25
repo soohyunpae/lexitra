@@ -2,7 +2,7 @@ export async function searchTranslationMemory(
   query: string,
   sourceLang: string,
   targetLang: string
-): Promise<any[]> {
+): Promise<{ source: string; target: string; score: number }[]> {
   const url = `/api/search_tm?query=${encodeURIComponent(query)}&sourceLang=${sourceLang}&targetLang=${targetLang}`;
   console.log('[search-tm] 요청 URL:', url);
 
@@ -15,5 +15,5 @@ export async function searchTranslationMemory(
 
   const data = await response.json();
   console.log('[search-tm] 응답 데이터:', data);
-  return data;
+  return data as { source: string; target: string; score: number }[];
 }

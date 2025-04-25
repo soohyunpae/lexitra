@@ -13,7 +13,7 @@ class TMEntry(BaseModel):
     sourceLang: str
     targetLang: str
     updatedAt: Optional[str] = None
-    status: str = "Approved"
+    status: str = "Reviewed"
     comment: str = ""
 
 class TMUpdateRequest(BaseModel):

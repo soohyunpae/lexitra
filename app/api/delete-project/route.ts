@@ -3,7 +3,8 @@ import { deleteProjectFromDB } from './deleteProjectFromDB'; // 삭제 함수 �
 export async function DELETE(req: Request) {
   try {
     // 쿼리 파라미터에서 ID 추출
-    const projectId = req.url.split('?')[1]?.split('=')[1]; 
+    const { searchParams } = new URL(req.url);
+    const projectId = searchParams.get('id');
 
     if (!projectId) {
       return new Response(

@@ -62,7 +62,12 @@ export default function UploadPage() {
         const gptData = await gptRes.json();
         newTranslations.push(gptData.translatedText);
         newMatches.push({ target: gptData.translatedText, score: 0 });
-      } catch (err) {
+      } catch (err: unknown) {
+        if (err instanceof Error) {
+          console.error(err.message);
+        } else {
+          console.error('Unknown error:', err);
+        }
         newTranslations.push('(번역 실패)');
         newMatches.push({ target: '', score: 0 });
       }
@@ -113,8 +118,12 @@ export default function UploadPage() {
         setSaved(newSaved)
         setModified(newModified)
       }
-    } catch (err) {
-      console.error(err)
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        console.error(err.message);
+      } else {
+        console.error('Unknown error:', err);
+      }
       alert('❌ 저장 실패')
     }
   }

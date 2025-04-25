@@ -24,6 +24,10 @@ export async function GET(request: Request) {
       },
     });
 
+    if (!entries || entries.length === 0) {
+      return NextResponse.json({ source: text, target: '', score: 0 });
+    }
+
     const candidates = entries.map(entry => entry.source);
     const { bestMatch, bestMatchIndex } = stringSimilarity.findBestMatch(text, candidates);
 

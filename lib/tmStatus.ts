@@ -1,13 +1,13 @@
 export const TMStatus = {
   MT: "MT", // Machine Translation
-  Approved: "Approved", // Reviewed and approved
+  Reviewed: "Reviewed", // Human-reviewed and approved
   Fuzzy: "Fuzzy", // Partial match
-  Exact: "Exact", // Exact match
+  "100%": "100%", // Exact match
 };
 
 // Utility functions for TM status
-export function isApproved(status: string): boolean {
-  return status === TMStatus.Approved;
+export function isReviewed(status: string): boolean {
+  return status === TMStatus.Reviewed;
 }
 
 export function isFuzzy(status: string): boolean {

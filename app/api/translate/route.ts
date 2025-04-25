@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getBestTmMatch, upsertTmEntry } from '@/lib/tmUtils';
+import { lookupFromTM, saveToTM } from '@/lib/tm';
 import OpenAI from 'openai';
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
@@ -15,8 +15,8 @@ export async function POST(request: Request) {
     console.log('[translate] 입력:', { text, sourceLang, targetLang });
 
     // TM 조회
-    const tmResult = await getBestTmMatch(text, sourceLang, targetLang);
-    if (tmResult.score >= 70 && tmResult.target) {
+    const tmResult = await lookupFromTM(text, sourceLang, targetLang) as { target: string; score: number } | null;
+    if (tmResult && tmResult.score >= 70 && tmResult.target) {
       console.log('[translate] TM 매치 결과:', tmResult);
       return NextResponse.json({ translatedText: tmResult.target, fromTM: true });
     }
@@ -39,7 +39,7 @@ export async function POST(request: Request) {
     console.log('[translate] GPT 번역 결과:', gptTranslation);
 
     // TM 저장
-    await upsertTmEntry({
+    await saveToTM({
       source: text,
       target: gptTranslation,
       sourceLang,

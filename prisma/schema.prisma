@@ -25,6 +25,8 @@ model Project {
   note       String?
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
+  translationUnits TranslationUnit[]
+  files      ProjectFile[]
 }
 
 model TermbaseEntry {
@@ -33,4 +35,31 @@ model TermbaseEntry {
   definition String
   note       String?
   createdAt  DateTime @default(now())
+}
+
+model TranslationUnit {
+  id          Int      @id @default(autoincrement())
+  source      String
+  target      String
+  sourceLang  String
+  targetLang  String
+  status      String   @default("MT")
+  comment     String?
+  createdAt   DateTime @default(now())
+  projectId   Int
+  project     Project  @relation(fields: [projectId], references: [id])
+  fileId      Int?
+  file        ProjectFile? @relation(fields: [fileId], references: [id])
+  @@unique([source, sourceLang, targetLang, projectId, fileId])
+}
+model ProjectFile {
+  id         Int      @id @default(autoincrement())
+  filename   String
+  content    String
+  createdAt  DateTime @default(now())
+  projectId  Int
+  project    Project  @relation(fields: [projectId], references: [id])
+  isInitialized Boolean @default(false)
+
+  translationUnits TranslationUnit[]
 }

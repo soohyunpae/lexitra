@@ -1,6 +1,9 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import CreateProjectModal from '@/components/CreateProjectModal';
 
 interface Project {
   id: number;
@@ -15,6 +18,9 @@ export default function ProjectsPage() {
   const [newProjectName, setNewProjectName] = useState('');
   const [newProjectNote, setNewProjectNote] = useState('');
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+  const [showCreateForm, setShowCreateForm] = useState(false);
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+  const router = useRouter();
 
   const fetchProjects = async () => {
     try {
@@ -31,21 +37,27 @@ export default function ProjectsPage() {
   }, []);
 
   const handleCreateProject = async () => {
+    const formData = new FormData();
+    formData.append('name', newProjectName);
+    formData.append('note', newProjectNote);
+    selectedFiles.forEach((file) => {
+      formData.append('files', file);
+    });
+
     try {
-      const res = await fetch('/api/create-project', {
+      const res = await fetch('/api/projects', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name: newProjectName,
-          note: newProjectNote,  // description을 note로 변경
-        }),
+        body: formData,
       });
-      const newProject = await res.json();
-      setProjects((prev) => [...prev, newProject]);
-      setNewProjectName('');
-      setNewProjectNote('');
-    } catch (e) {
-      console.error('Failed to create project:', e);
+
+      if (!res.ok) {
+        throw new Error('Failed to create project');
+      }
+
+      const data = await res.json();
+      router.push(`/projects/${data.id}`);  // Redirect to the project details page
+    } catch (error) {
+      console.error('Error creating project:', error);
     }
   };
 
@@ -99,40 +111,36 @@ export default function ProjectsPage() {
     }
   };
 
+
   return (
-    <div>
+    <div className="bg-white text-black dark:bg-gray-900 dark:text-white min-h-screen">
       <h1 className="text-2xl font-bold mb-4">📋 프로젝트 목록</h1>
-
-      {/* 프로젝트 생성 폼 */}
-      <div className="p-6">
-        <h1 className="text-2xl font-bold mb-4">프로젝트 생성</h1>
-
-        <div className="mb-4 space-y-3">
-          <input
-            type="text"
-            placeholder="프로젝트 이름"
-            value={newProjectName}
-            onChange={(e) => setNewProjectName(e.target.value)}
-            className="border p-2 rounded w-full"
-          />
-          <textarea
-            placeholder="프로젝트 설명"
-            value={newProjectNote}
-            onChange={(e) => setNewProjectNote(e.target.value)}
-            className="border p-2 rounded w-full"
-          />
-        </div>
-
+      <div>
         <button
-          onClick={handleCreateProject}
-          className="px-4 py-2 bg-blue-600 text-white rounded"
+          onClick={() => setShowCreateForm(!showCreateForm)}
+          className="mb-6 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
         >
-          프로젝트 생성
+          ➕ 새 프로젝트 생성
         </button>
       </div>
 
+      {showCreateForm && (
+        <CreateProjectModal
+          key="project-modal"
+          open={showCreateForm}
+          onClose={() => setShowCreateForm(false)}
+          newProjectName={newProjectName}
+          newProjectNote={newProjectNote}
+          setNewProjectName={setNewProjectName}
+          setNewProjectNote={setNewProjectNote}
+          selectedFiles={selectedFiles}
+          setSelectedFiles={setSelectedFiles}
+          handleCreateProject={handleCreateProject}
+        />
+      )}
+
       {/* 프로젝트 목록 테이블 */}
-      <div className="overflow-x-auto p-6 bg-gray-900 shadow-sm rounded-md mb-6">
+      <div className="overflow-x-auto p-6 bg-gray-100 text-black dark:bg-gray-900 dark:text-white shadow-sm rounded-md mb-6">
         <table className="w-full text-sm table-auto border-collapse text-gray-800 dark:text-white">
           <thead className="bg-gray-100 dark:bg-gray-800">
             <tr>
@@ -140,30 +148,22 @@ export default function ProjectsPage() {
               <th className="border p-2 text-left text-gray-800 dark:text-white">설명</th>
               <th className="border p-2 text-left text-gray-800 dark:text-white">생성일</th>
               <th className="border p-2 text-left text-gray-800 dark:text-white">수정일</th>
-              <th className="border p-2 text-left text-gray-800 dark:text-white">관리</th>
             </tr>
           </thead>
           <tbody>
               {projects.map((project) => (
               <tr key={project.id} className="border-t dark:border-gray-700">
-                <td className="p-2 text-gray-800 dark:text-white">{project.name}</td>
+                <td className="p-2 text-gray-800 dark:text-white">
+                  <Link
+                    href={`/project/${project.id}`}
+                    className="block w-full text-blue-400 hover:underline hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer p-2 rounded"
+                  >
+                    {project.name}
+                  </Link>
+                </td>
                 <td className="p-2 text-gray-800 dark:text-white">{project.note}</td>
                 <td className="p-2 text-gray-800 dark:text-white">{new Date(project.createdAt).toLocaleString()}</td>
                 <td className="p-2 text-gray-800 dark:text-white">{new Date(project.updatedAt).toLocaleString()}</td>
-                <td className="p-2 text-gray-800 dark:text-white">
-                  <button
-                    onClick={() => setSelectedProject(project)}
-                    className="text-blue-600 dark:text-blue-400 hover:underline mr-2"
-                  >
-                    수정
-                  </button>
-                  <button
-                    onClick={() => handleDeleteProject(project.id)}  // 삭제 버튼 클릭 시 삭제 처리
-                    className="text-red-600 dark:text-red-400 hover:underline"
-                  >
-                    삭제
-                  </button>
-                </td>
               </tr>
             ))}
           </tbody>
@@ -172,7 +172,7 @@ export default function ProjectsPage() {
 
       {/* 프로젝트 수정 폼 */}
       {selectedProject && (
-        <div className="p-6 bg-gray-900 shadow-md rounded-lg">
+        <div className="p-6 bg-gray-100 text-black dark:bg-gray-900 dark:text-white shadow-md rounded-lg">
           <h2 className="text-2xl font-bold mb-4 text-white">프로젝트 수정</h2>
 
           <div className="mb-4 space-y-3">

@@ -1,6 +1,6 @@
-import type { TmEntry } from '@/lib/types';
+import type { TmEntry, TMStatus } from '@/lib/types';
 import { NextResponse } from 'next/server';
-import { upsertTmEntry } from '@/lib/tmUtils';
+import { saveToTM } from '@/lib/tm';
 
 // ✅ 유니코드 정규화 + 공백 정리 함수
 function normalizeText(s: string): string {
@@ -21,7 +21,7 @@ export async function POST(req: Request) {
       target,
       sourceLang,
       targetLang,
-      status = 'Approved',
+      status = 'Reviewed',
       comment = '',
     } = body;
 
@@ -31,19 +31,19 @@ export async function POST(req: Request) {
       return NextResponse.json({ message: '필수 필드 누락' }, { status: 400 });
     }
 
-    const normalizedPayload = {
+    const normalizedPayload: TmEntry = {
       source: normalizeText(source),
       sourceLang: normalizeText(sourceLang),
       targetLang: normalizeText(targetLang),
       target: normalizeText(target),
-      status,
+      status: status as TMStatus,
       comment: normalizeText(comment),
-      updatedAt: new Date(),
+      updatedAt: new Date().toISOString(),
     };
 
     console.log('📤 TM 업데이트 전송:', normalizedPayload);
 
-    await upsertTmEntry(normalizedPayload as TmEntry); 
+    saveToTM(normalizedPayload);
 
     return NextResponse.json({ status: 'ok' });
   } catch (error) {

@@ -2,15 +2,15 @@ export default function TMStatusBadge({ status }: { status: string }) {
   const statusColorMap: Record<string, string> = {
     MT: 'bg-gray-600',
     Fuzzy: 'bg-yellow-600',
-    Exact: 'bg-blue-600',
-    Approved: 'bg-green-600',
+    '100%': 'bg-blue-600',
+    Reviewed: 'bg-green-600',
   };
 
   const statusLabelMap: Record<string, string> = {
-    MT: 'Machine Translated',
-    Fuzzy: 'Fuzzy Match',
-    Exact: 'Exact Match',
-    Approved: 'Approved',
+    MT: 'MT',
+    Fuzzy: 'Fuzzy',
+    '100%': '100%',
+    Reviewed: 'Reviewed',
   };
 
   const className = statusColorMap[status] || 'bg-black';

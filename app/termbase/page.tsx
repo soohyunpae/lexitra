@@ -28,8 +28,10 @@ export default function TermbasePage() {
         setNote('');
         alert('용어가 등록되었습니다.');
       }
-    } catch (err) {
-      console.error('용어 등록 실패:', err);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        console.error('용어 등록 실패:', err.message);
+      }
     }
   };
   
@@ -47,8 +49,10 @@ export default function TermbasePage() {
       if (data.status === 'ok') {
         alert('용어집이 업로드되었습니다.');
       }
-    } catch (err) {
-      console.error('CSV 업로드 실패:', err);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        console.error('CSV 업로드 실패:', err.message);
+      }
     }
   };
 
@@ -64,8 +68,10 @@ export default function TermbasePage() {
       if (data.status === 'ok') {
         setTerms(terms.filter((t) => t.id !== id));
       }
-    } catch (err) {
-      console.error('삭제 실패:', err);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        console.error('삭제 실패:', err.message);
+      }
     }
   };
 
@@ -93,8 +99,10 @@ export default function TermbasePage() {
         );
         setEditingId(null);
       }
-    } catch (err) {
-      console.error('수정 실패:', err);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        console.error('수정 실패:', err.message);
+      }
     }
   };
 
